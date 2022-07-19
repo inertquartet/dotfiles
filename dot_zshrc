@@ -1,0 +1,16 @@
+export EDITOR=emacs
+export VISUAL=emacs
+
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOME/.aliases
+
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
+
+eval "$(starship init zsh)"
+
