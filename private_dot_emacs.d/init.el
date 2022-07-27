@@ -26,6 +26,6 @@
 (eval-when-compile
   (require 'use-package))
 
-(org-babel-load-file "~/.emacs.d/configuration.org")
+;;(org-babel-load-file "~/.emacs.d/configuration.org")
 
 ;; (server-start)
