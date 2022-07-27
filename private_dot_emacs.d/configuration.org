@@ -45,228 +45,30 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 
 Define a whole mess of handy utility functions
 
-** Change task state when clocking in
+# ** Change task state when clocking in
 
-#+BEGIN_SRC emacs-lisp
-(defun wp/clock-in-to-working (kw)
-  "Switch task from TODO to WORKING when clocking on.
-Skips capture tasks and tasks with subtasks"
-  (when (and (not (and (boundp 'org-capture-mode) org-capture-mode))
-             (member kw vm/todo-list))
-    "WORKING"))
+# #+BEGIN_SRC emacs-lisp
+# (defun wp/clock-in-to-working (kw)
+#   "Switch task from TODO to WORKING when clocking on.
+# Skips capture tasks and tasks with subtasks"
+#   (when (and (not (and (boundp 'org-capture-mode) org-capture-mode))
+#              (member kw vm/todo-list))
+#     "WORKING"))
 
-#+END_SRC
+# #+END_SRC
 
-** Tag management
+# ** Insert =org-journal= entry via capture template
 
-#+BEGIN_SRC emacs-lisp
-(defun wp--org-swap-tags (tags)
-  "Replace any tags on the current headline with TAGS.
+# #+BEGIN_SRC emacs-lisp
+# (defun org-journal-find-location ()
+#   ;; Open today's journal, but specify a non-nil prefix argument in order to
+#   ;; inhibit inserting the heading; org-capture will insert the heading.
+#   (org-journal-new-entry t)
+#   ;; Position point on the journal's top-level heading so that org-capture
+#   ;; will add the new entry as a child entry.
+#   (goto-char (point-min)))
+# #+END_SRC
 
-Assumption: TAGS will be a string conforming ot Org-Mode's
-tag format specification, or nil to remove all tags."
-  (let ((old-tags (org-get-tags-string))
-        (tags (if tags
-	          (concat " " tags)
-		"")))
-    (save-excursion
-      (beginning-of-line)
-      (re-search-forward
-       (concat "[ \t]*" (regexp-quote old-tags) "[ \t*$")
-       (line-end-position) t)
-      (replace-match tags)
-      (org-set-tags-command t))))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun wp-org-set-tags (tag)
-  "Add TAG if it is not in the list of tags, remove it otherwise.
-
-TAG is chosen interactively from the global tags completion table."
-  (interactive
-   (list (let ((org-last-tags-completion-table
-                (if (derived-mode-p 'org-mode)
-                    (org-uniquify
-                     (delq nil (append (org-get-buffer-tags)
-                                       (org-global-tags-completion-table))))
-                  (org-global-tags-completion-table))))
-           (org-icompleting-read
-            "Tag: " 'org-tags-completion-function nil nil nil
-            'org-tags-history))))
-  (let* ((cur-list (org-get-tags))
-         (new-tags (mapconcat 'identity
-                              (if (member tag cur-list)
-                                  (delete tag cur-list)
-                                (append cur-list (list tag)))
-                              ":"))
-         (new (if (> (length new-tags) 1) (concat " :" new-tags ":")
-                nil)))
-    (wp--org-swap-tags new)))
-#+END_SRC
-
-** Custom ID management
-#+BEGIN_SRC emacs-lisp
-(defun wp--org-global-custom-ids ()
-  "Find custom ID fields in all org agenda files."
-  (let ((files (org-agenda-files))
-        file
-        wp-all-org-custom-ids)
-    (while (setq file (pop files))
-      (with-current-buffer (org-get-agenda-file-buffer file)
-        (save-excursion
-          (save-restriction
-            (widen)
-            (goto-char (point-min))
-            (while (re-search-forward "^[ \t]*:CUSTOM_ID:[ \t]+\\(\\S-+\\)[ \t]*$"
-                                      nil t)
-              (add-to-list 'wp-all-org-custom-ids
-                           `(,(match-string-no-properties 1)
-                             ,(list file (line-number-at-pos)))))))))
-    wp-all-org-custom-ids))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun wp--org-find-custom-id (custom-id)
-  "Return the location of CUSTOM-ID."
-  (let* ((all-custom-ids (wp--org-global-custom-ids)))
-    (let* ((id-parts (cadr (assoc custom-id all-custom-ids)))
-           (file (car id-parts))
-           (line (cadr id-parts)))
-      (with-current-buffer (org-get-agenda-file-buffer file)
-        (goto-char (point-min))
-        (forward-line line)
-        (org-reveal)
-        (org-up-element)
-        (list (current-buffer) (point))))))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun wp-org-goto-custom-id (&optional split)
-  "Go to the location of a custom ID read interactively, maybe in a SPLIT."
-  (interactive "P")
-  (let* ((all-custom-ids (wp-org-global-custom-ids))
-         (custom-id (completing-read
-                     "Custom ID: "
-                     all-custom-ids))
-         (id-location (wp-org-find-custom-id custom-id)))
-    (when id-location
-      (let* ((buf (car id-location))
-             (loc (cadr id-location)))
-        (pop-to-buffer buf (if split t nil))
-        (goto-char loc)
-        (org-reveal)))))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun wp-org-insert-custom-id-link ()
-  "Insert an Org link to a custom ID selected interactively."
-  (interactive)
-  (let* ((all-custom-ids (wp--org-global-custom-ids))
-         (custom-id (completing-read
-                     "Custom ID: "
-                     all-custom-ids)))
-    (when custom-id
-      (let* ((id-parts (cadr (assoc custom-id all-custom-ids)))
-             (file (car id-parts))
-             (line (cadr id-parts)))
-        (org-insert-link nil (concat file "::#" custom-id) custom-id)))))
-#+END_SRC
-
-** Insert =org-journal= entry via capture template
-
-#+BEGIN_SRC emacs-lisp
-(defun org-journal-find-location ()
-  ;; Open today's journal, but specify a non-nil prefix argument in order to
-  ;; inhibit inserting the heading; org-capture will insert the heading.
-  (org-journal-new-entry t)
-  ;; Position point on the journal's top-level heading so that org-capture
-  ;; will add the new entry as a child entry.
-  (goto-char (point-min)))
-#+END_SRC
-
-** Shutdown emacs daemon gracefully
-#+BEGIN_SRC emacs-lisp
-(defun client-save-kill-emacs(&optional display)
-  " This is a function that can by used to shutdown save buffers and
-shutdown the emacs daemon. It should be called using
-emacsclient -e '(client-save-kill-emacs)'.  This function will
-check to see if there are any modified buffers or active clients
-or frame.  If so an x window will be opened and the user will
-be prompted."
-
-  (let (new-frame modified-buffers active-clients-or-frames)
-
-    ; Check if there are modified buffers or active clients or frames.
-    (setq modified-buffers (modified-buffers-exist))
-    (setq active-clients-or-frames ( or (> (length server-clients) 1)
-					(> (length (frame-list)) 1)
-				       ))
-
-    ; Create a new frame if prompts are needed.
-    (when (or modified-buffers active-clients-or-frames)
-      (when (not (eq window-system 'x))
-	(message "Initializing x windows system.")
-	(x-initialize-window-system))
-      (when (not display) (setq display (getenv "DISPLAY")))
-      (message "Opening frame on display: %s" display)
-      (select-frame (make-frame-on-display display '((window-system . x)))))
-
-    ; Save the current frame.
-    (setq new-frame (selected-frame))
-
-
-    ; When displaying the number of clients and frames:
-    ; subtract 1 from the clients for this client.
-    ; subtract 2 from the frames this frame (that we just created) and the default frame.
-    (when ( or (not active-clients-or-frames)
-	       (yes-or-no-p (format "There are currently %d clients and %d frames. Exit anyway?" (- (length server-clients) 1) (- (length (frame-list)) 2))))
-
-      ; If the user quits during the save dialog then don't exit emacs.
-      ; Still close the terminal though.
-      (let((inhibit-quit t))
-             ; Save buffers
-	(with-local-quit
-	  (save-some-buffers))
-
-	(if quit-flag
-	  (setq quit-flag nil)
-          ; Kill all remaining clients
-	  (progn
-	    (dolist (client server-clients)
-	      (server-delete-client client))
-		 ; Exit emacs
-	    (kill-emacs)))
-	))
-
-    ; If we made a frame then kill it.
-    (when (or modified-buffers active-clients-or-frames) (delete-frame new-frame))
-    )
-  )
-
-
-(defun modified-buffers-exist()
-  "This function will check to see if there are any buffers
-that have been modified.  It will return true if there are
-and nil otherwise. Buffers that have buffer-offer-save set to
-nil are ignored."
-  (let (modified-found)
-    (dolist (buffer (buffer-list))
-      (when (and (buffer-live-p buffer)
-		 (buffer-modified-p buffer)
-		 (not (buffer-base-buffer buffer))
-		 (or
-		  (buffer-file-name buffer)
-		  (progn
-		    (set-buffer buffer)
-		    (and buffer-offer-save (> (buffer-size) 0))))
-		 )
-	(setq modified-found t)
-	)
-      )
-    modified-found
-    )
-  )
-#+END_SRC
 
 * UI Preferences
 ** Tweak UI chrome
