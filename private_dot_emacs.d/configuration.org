@@ -252,25 +252,25 @@ Softly highlight the background color of the line containing the point.
 #+END_SRC
 
 ** Use ido (Interactively DO) mode by default
-#+BEGIN_SRC emacs-lisp
-(require 'ido)
-(ido-mode t)
+# #+BEGIN_SRC emacs-lisp
+# (require 'ido)
+# (ido-mode t)
 
-;; show any name that matches the characters typed
-(setq ido-enable-flex-matching t)
+# ;; show any name that matches the characters typed
+# (setq ido-enable-flex-matching t)
 
-;; use current pane when opening new files
-(setq ido-default-file-method 'selected-window)
+# ;; use current pane when opening new files
+# (setq ido-default-file-method 'selected-window)
 
-;; use current pane when switching buffers
-(setq ido-default-buffer-method 'selected-window)
+# ;; use current pane when switching buffers
+# (setq ido-default-buffer-method 'selected-window)
 
-;; don't suggest when naming new files
-(define-key (cdr ido-minor-mode-map-entry) [remap write-file] nil)
+# ;; don't suggest when naming new files
+# (define-key (cdr ido-minor-mode-map-entry) [remap write-file] nil)
 
-;; make minibuffer neight bigger to allow ido to show choices vertically
-(setq max-mini-window-height 0.5)
-#+END_SRC
+# ;; make minibuffer neight bigger to allow ido to show choices vertically
+# (setq max-mini-window-height 0.5)
+# #+END_SRC
 
 ** Separate customization file from =init.el=
 #+BEGIN_SRC emacs-lisp
@@ -291,69 +291,70 @@ Softly highlight the background color of the line containing the point.
 #+end_src
 
 ** Set default web browser
-#+BEGIN_SRC emacs-lisp
-;; (setq browse-url-generic-program
-;; (executable-find (getenv "BROWSER"))
-;; browse-url-browser-function 'browse-url-generic)
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+#  (setq browse-url-generic-program
+#  (executable-find (getenv "BROWSER"))
+#  browse-url-browser-function 'browse-url-generic)
+# #+END_SRC
 ** Fix =ediff= behavior
 #+begin_src emacs-lisp
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setq ediff-split-window-function 'split-window-horizontally)
 #+end_src
 
+
 * Miscellaneous Utility Packages
 ** CSV Mode
-#+BEGIN_SRC emacs-lisp
-(use-package csv-mode)
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+# (use-package csv-mode)
+# #+END_SRC
 ** Tiny Menu
-#+BEGIN_SRC emacs-lisp
-(use-package tiny-menu
-  :config
-  (setq tiny-menu-items
-      '(("buffer-menu" ("Buffer operations"
-			((?k "Kill" kill-this-buffer "buffer-menu")
-			 (?b "Bury" bury-buffer "root")
-			 (?h "Goto help" nil "help-menu"))))
-	("help-menu"   ("Help operations"
-			((?f "Describe function" describe-function "quit")
-			 (?k "Describe key"      describe-key))))
-	("org-things"   ("Things"
-                         ((?t "Tag"     org-tags-view)
-                          (?i "ID"      cm-org-goto-custom-id)
-                          (?k "Keyword" org-search-view))))
-        ("org-links"    ("Links"
-                         ((?c "Capture"   org-store-link)
-                          (?l "Insert"    org-insert-link)
-                          (?i "Custom ID" cm-org-insert-custom-id-link))))))
+# #+BEGIN_SRC emacs-lisp
+# (use-package tiny-menu
+#   :config
+#   (setq tiny-menu-items
+#       '(("buffer-menu" ("Buffer operations"
+# 			((?k "Kill" kill-this-buffer "buffer-menu")
+# 			 (?b "Bury" bury-buffer "root")
+# 			 (?h "Goto help" nil "help-menu"))))
+# 	("help-menu"   ("Help operations"
+# 			((?f "Describe function" describe-function "quit")
+# 			 (?k "Describe key"      describe-key))))
+# 	("org-things"   ("Things"
+#                          ((?t "Tag"     org-tags-view)
+#                           (?i "ID"      cm-org-goto-custom-id)
+#                           (?k "Keyword" org-search-view))))
+#         ("org-links"    ("Links"
+#                          ((?c "Capture"   org-store-link)
+#                           (?l "Insert"    org-insert-link)
+#                           (?i "Custom ID" cm-org-insert-custom-id-link))))))
 
-(setq tiny-menu-forever nil))
+# (setq tiny-menu-forever nil))
 #+END_SRC
 * Helm
-** Basic configuration
-#+BEGIN_SRC emacs-lisp
-(use-package helm
-  :config
-  (require 'helm)
-  (require 'helm-config))
-  (when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
+# ** Basic configuration
+# #+BEGIN_SRC emacs-lisp
+# (use-package helm
+#   :config
+#   (require 'helm)
+#   (require 'helm-config))
+   (when (executable-find "curl")
+#   (setq helm-google-suggest-use-curl-p t))
 
-  (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-  helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-  helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-  helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-  helm-ff-file-name-history-use-recentf t
-  helm-echo-input-in-header-line t)
+#   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+#   helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+#   helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+#   helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+#   helm-ff-file-name-history-use-recentf t
+#   helm-echo-input-in-header-line t)
 
 
-  (setq helm-autoresize-max-height 0)
-  (setq helm-autoresize-min-height 20)
-  (helm-autoresize-mode 1)
+#   (setq helm-autoresize-max-height 0)
+#   (setq helm-autoresize-min-height 20)
+#   (helm-autoresize-mode 1)
 
-  (helm-mode 1)
-#+END_SRC
+#   (helm-mode 1)
+# #+END_SRC
 
 ** Key bindings
 
@@ -361,21 +362,22 @@ The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 Changed to "C-c h". Note: We must set "C-c h" globally, because we
 cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c h") 'helm-command-prefix)
-(global-unset-key (kbd "C-x c"))
-(global-set-key (kbd "M-x") 'helm-M-x) ; use Helm for M-x
-(global-set-key (kbd "M-y") 'helm-show-kill-ring) ; use Helm for kill ring
-(global-set-key (kbd "C-x b") 'helm-mini) ; use Helm to navigate buffers/recentf
-(global-set-key (kbd "C-x C-f") 'helm-find-files) ; use Helm to find files
-(global-set-key (kbd "C-c h o") 'helm-occur) ; use Helm for occurences in current buffer
-(global-set-key (kbd "C-h SPC") 'helm-all-mark-rings) ; use Helm to view all mark rings
-(global-set-key (kbd "C-c h g") 'helm-google-suggest) ; Google Search
+# #+BEGIN_SRC emacs-lisp
+# (global-set-key (kbd "C-c h") 'helm-command-prefix)
+# (global-unset-key (kbd "C-x c"))
+# (global-set-key (kbd "M-x") 'helm-M-x) ; use Helm for M-x
+# (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; use Helm for kill ring
+# (global-set-key (kbd "C-x b") 'helm-mini) ; use Helm to navigate buffers/recentf
+# (global-set-key (kbd "C-x C-f") 'helm-find-files) ; use Helm to find files
+# (global-set-key (kbd "C-c h o") 'helm-occur) ; use Helm for occurences in current buffer
+# (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings) ; use Helm to view all mark rings
+# (global-set-key (kbd "C-c h g") 'helm-google-suggest) ; Google Search
 
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-#+END_SRC
+# (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+# (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+# (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+# #+END_SRC
+
 * Org Mode
 
 ** Basic Configuration
