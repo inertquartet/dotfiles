@@ -1,6 +1,6 @@
 +TITLE: Emacs Configuration
 #+AUTHOR: Chad McAuley
-#+EMAIL: chad.mcauley@outlook.com
+#+EMAIL: inertquartet@github.com
 #+OPTIONS: toc:nil num:nil
 
 * Configure =use-package=
@@ -37,7 +37,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Chad McAuley")
-  (setq user-mail-address "chad.mcauley@outlook.com")
+  (setq user-mail-address "inertquartet@github.com"
 
 #+END_SRC
 
