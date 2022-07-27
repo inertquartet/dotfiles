@@ -95,8 +95,9 @@ Hide minibuffer scrollbar
 
 ** Load a theme
 #+BEGIN_SRC emacs-lisp
-(use-package color-theme-sanityinc-tomorrow :ensure t)
+(use-package github-dark-vscode-theme :ensure t)
 #+END_SRC
+
 ** Use =moody= for a beautiful modeline
 
 #+BEGIN_SRC emacs-lisp
@@ -122,14 +123,22 @@ Hide minibuffer scrollbar
 #+BEGIN_SRC emacs-lisp
 (setq ring-bell-function 'ignore)
 #+END_SRC
+
 ** Inhibit startup message
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
 #+END_SRC
+
+** Visual Line Mode
+#+BEGIN_SRC emacs-lisp
+(global-visual-line-mode 1)
+#+END_SRC
+
 ** Don't use dialog boxes
 #+BEGIN_SRC emacs-lisp
 (setq use-dialog-box nil)
 #+END_SRC
+
 ** Scroll conservatively
 
 #+BEGIN_SRC emacs-lisp
@@ -141,8 +150,8 @@ Hide minibuffer scrollbar
 I've been really enjoying MSFT's new =Cascadia Code= font
 
 #+BEGIN_SRC emacs-lisp
-  (setq wp/default-font "Cascadia Code")
-  (setq wp/default-font-size 9)
+  (setq wp/default-font "Caskaydia Cove Nerd Font")
+  (setq wp/default-font-size 12)
   (setq wp/current-font-size wp/default-font-size)
 
   (setq wp/font-change-increment 1.1)
@@ -190,10 +199,12 @@ I've been really enjoying MSFT's new =Cascadia Code= font
 
   (wp/reset-font-size)
 #+END_SRC
+
 ** Display column position
 #+BEGIN_SRC emacs-lisp
 (setq column-number-mode t)
 #+END_SRC
+
 ** Highlight current line
 
 Softly highlight the background color of the line containing the point.
@@ -201,11 +212,13 @@ Softly highlight the background color of the line containing the point.
 #+BEGIN_SRC emacs-lisp
 (global-hl-line-mode)
 #+END_SRC
+
 ** Highlight brackets
 #+BEGIN_SRC emacs-lisp
 (show-paren-mode 1)
 (setq show-paren-style 'mixed)
 #+END_SRC
+
 ** Window Management
 
 #+begin_src emacs-lisp
@@ -226,23 +239,18 @@ Softly highlight the background color of the line containing the point.
 #+end_src
 
 * Miscellaneous Settings
-** Visual Line Mode
-#+BEGIN_SRC emacs-lisp
-(global-visual-line-mode 1)
-#+END_SRC
-** Inhibit startup message
-#+BEGIN_SRC emacs-lisp
-(setq inhibit-startup-message t)
-#+END_SRC
+
 ** Save/restore opened files and window config
 #+BEGIN_SRC emacs-lisp
 (desktop-change-dir "~/.emacs.desktop")
 (desktop-save-mode 1) ; 0 to turn off
 #+END_SRC
+
 ** Keep a list of recently opened files
 #+BEGIN_SRC emacs-lisp
 (recentf-mode 1)
 #+END_SRC
+
 ** Use ido (Interactively DO) mode by default
 #+BEGIN_SRC emacs-lisp
 (require 'ido)
@@ -263,15 +271,18 @@ Softly highlight the background color of the line containing the point.
 ;; make minibuffer neight bigger to allow ido to show choices vertically
 (setq max-mini-window-height 0.5)
 #+END_SRC
+
 ** Separate customization file from =init.el=
 #+BEGIN_SRC emacs-lisp
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 #+END_SRC
+
 ** Send deleted items to recycle bin
 #+BEGIN_SRC emacs-lisp
 (setq delete-by-moving-to-trash t)
 #+END_SRC
+
 ** Change backup location
 #+begin_src emacs-lisp
 (setq backup-directory-alist
