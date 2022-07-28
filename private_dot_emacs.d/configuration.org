@@ -37,7 +37,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "Chad McAuley")
-  (setq user-mail-address "inertquartet@github.com"
+  (setq user-mail-address "inertquartet@github.com")
 
 #+END_SRC
 
