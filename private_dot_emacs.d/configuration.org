@@ -93,11 +93,6 @@ Hide minibuffer scrollbar
 (global-prettify-symbols-mode t)
 #+END_SRC
 
-** Load a theme
-#+BEGIN_SRC emacs-lisp
-(use-package github-dark-vscode-theme :ensure t)
-#+END_SRC
-
 ** Use =moody= for a beautiful modeline
 
 #+BEGIN_SRC emacs-lisp
@@ -106,6 +101,12 @@ Hide minibuffer scrollbar
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
+#+END_SRC
+
+** Load a theme
+#+BEGIN_SRC emacs-lisp
+  (use-package color-theme-sanityinc-tomorrow :ensure t)
+  (load-theme 'sanityinc-tomorrow-night
 #+END_SRC
 
 ** Use =minions= to hide minor modes
