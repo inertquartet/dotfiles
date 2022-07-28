@@ -106,7 +106,7 @@ Hide minibuffer scrollbar
 ** Load a theme
 #+BEGIN_SRC emacs-lisp
   (use-package color-theme-sanityinc-tomorrow :ensure t)
-  (load-theme 'sanityinc-tomorrow-night
+  (load-theme 'sanityinc-tomorrow-night t)
 #+END_SRC
 
 ** Use =minions= to hide minor modes
