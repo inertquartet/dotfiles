@@ -150,7 +150,7 @@ Hide minibuffer scrollbar
 I've been really enjoying MSFT's new =Cascadia Code= font
 
 #+BEGIN_SRC emacs-lisp
-  (setq wp/default-font "Caskaydia Cove Nerd Font")
+  (setq wp/default-font "CaskaydiaCove Nerd Font Mono")
   (setq wp/default-font-size 12)
   (setq wp/current-font-size wp/default-font-size)
 
