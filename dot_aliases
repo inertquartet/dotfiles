@@ -1,8 +1,8 @@
-# Aliases 
+# Aliases
 
 # OS/platform specific
 case "$OSTYPE" in
-	darwin*) # Mac (OS X) 
+	darwin*) # Mac (OS X)
 		# Aliases
 		alias killDS='find . -name *.DS_Store -type f -delete'
 		alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
@@ -20,9 +20,9 @@ case "$OSTYPE" in
 		alias ds='du -ks *|sort -rn' # find biggest file/dir in cwd
 		alias ls='ls -AFh --color' # colorized output, hidden dirs, human readable sizes, appent / to dir, * to executables, and @ to symlinks
 		;;
-	bsd*) 
+	bsd*)
 		;;
-	*) 
+	*)
 		echo "Unknown: OSTYPE"
 		;;
 esac
@@ -40,26 +40,6 @@ alias grep='grep --color=auto'
 alias path='echo $PATH | tr -s ":" "\n"
 
 # Functions
-
-# Go _u_p to the specified directory OR number of levels
-u() {
-	if [ -z "$1" ] 
-	then
-		cd ..
-	elif echo "$1" | grep -q '[0-9]\+'
-	then
-		cd "$(pwd | gawk 'BEGIN{FS=OFS="/"}NF>'$1'{NF-='$1'}NF==1{print"/"}NF>1')"
-	else
-		cd "$(pwd | gawk 'BEGIN{FS=OFS="/"}{for(i=NF;i>1;i--){if($i ~ "'$1'"){NF=i;break}}}1')"
-	fi
-	pwd
-}
-
-# Go _d_own to the specified directory name
-d() {
-	cd $(find . -type d -name "$1" -print -quit 2>/dev/null)
-	pwd
-}
 
 mkcd() {
 	mkdir -p "$1" && cd "$1"
