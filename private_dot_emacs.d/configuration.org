@@ -382,6 +382,12 @@ cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 * Org Mode
 
 ** Basic Configuration
+Use GNU org mode package only
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :pin gnu)
+#+END_SRC
 
 Set org file location to =~/org= and define default notes file
 
@@ -394,6 +400,61 @@ Set Agenda Files Location
 
 #+begin_src emacs-lisp
 (setq org-agenda-files '("~/org"))
+#+end_src
+
+Follow links when Enter/Return is pressed
+#+begin_src emacs-lisp
+(setq org-return-follows-link t)
+#+end_src
+
+When a TODO item is set to a done state, record a timestamp
+#+begin_src emacs-lisp
+  (setq org-log-done 'time)
+#+end_src
+
+Associate .org files with org mode
+
+#+begin_src emacs-lisp
+  ;;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+#+end_src
+
+Pretty indentation
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook 'org-indent-mode)
+#+end_src
+
+Change priority with UP/DOWN arrow keys
+
+#+begin_src emacs-lisp
+(define-key org-mode-map (kbd "C-c <up>") 'org-priority-up)
+(define-key org-mode-map (kbd "C-c <down>") 'org-priority-down)
+#+end_src
+
+Define shortcuts for storing links, opening agenda view, and starting a new capture
+
+#+begin_src emacs-lisp
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cc" 'org-capture)
+#+end_src
+
+Use SMR (shiftmetaright) to change level of org items
+
+#+begin_src emacs-lisp
+(define-key org-mode-map (kbd "C-c C-g C-r") 'org-shiftmetaright)
+#+end_src
+
+Hide emphasis markers
+
+#+begin_src emacs-lisp
+  (setq org-hide-emphasis-markers t)
+#+end_src
+
+Enable word wrap in org-mode
+
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'visual-line-mode)
 #+end_src
 
 Make initial scratch buffer default to Org mode:
