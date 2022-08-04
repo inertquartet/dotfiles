@@ -37,7 +37,7 @@ alias netlisten='lsof -i -P | grep LISTEN' # Active network listeners
 alias extip='dig +short myip.opendns.com @resolver1.opendns.com' # Or: ip.appspot.com # get external IP address
 alias tmux='tmux -2' # Force 256 colors
 alias grep='grep --color=auto'
-alias path='echo $PATH | tr -s ":" "\n"
+alias path='echo $PATH | tr -s ":" "\n"'
 
 # Functions
 
