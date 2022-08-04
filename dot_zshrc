@@ -1,5 +1,5 @@
-export EDITOR=emacs
-export VISUAL=emacs
+export EDITOR="emacsclient -c -a ''"
+export VISUAL="emacsclient -c -a ''"
 
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.aliases
@@ -13,4 +13,3 @@ then
 fi
 
 eval "$(starship init zsh)"
-
