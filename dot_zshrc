@@ -1,5 +1,5 @@
-export EDITOR="emacsclient -c -a ''"
-export VISUAL="emacsclient -c -a ''"
+export EDITOR="emacsclient -c"
+export VISUAL="emacsclient -c"
 
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.aliases
