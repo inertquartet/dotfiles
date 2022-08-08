@@ -104,11 +104,32 @@ Hide minibuffer scrollbar
 #+END_SRC
 
 ** Load a theme
-#+BEGIN_SRC emacs-lisp
-  (use-package color-theme-sanityinc-tomorrow :ensure t)
-  (load-theme 'sanityinc-tomorrow-night t)
-#+END_SRC
+# #+BEGIN_SRC emacs-lisp
+#   (use-package color-theme-sanityinc-tomorrow :ensure t)
+#   (load-theme 'sanityinc-tomorrow-night t)
+# #+END_SRC
 
+Load =doom-themes= and set theme to =doom-city-lights=
+
+#+BEGIN_SRC emacs-lisp
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-city-lights t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+#+END_SRC
 ** Use =minions= to hide minor modes
 
 #+BEGIN_SRC emacs-lisp
@@ -374,11 +395,17 @@ Use GNU org mode package only
     :pin gnu)
 #+END_SRC
 
+Use =org-super-agenda=
+#+BEGIN_SRC emacs-lisp
+  (use-package org-super-agenda
+  :ensure t)
+#+END_SRC
+
 Set org file location to =~/notebook= and define default notes file
 
 #+begin_src emacs-lisp
-(setq org-directory "~/notebook/")
-(setq org-default-notes-file (concat org-directory "/refile.org"))
+  (setq org-directory "~/notebook/")
+  (setq org-default-notes-file (concat org-directory "/refile.org"))
 #+end_src
 
 Set Agenda Files Location
@@ -510,7 +537,7 @@ Insert blank line before new heading or plain text list item
                       (:endgroup . nil)
 
                       ;; Ticket flags
-                      ("@write_future_ticket" . ?w)
+                      ("@write_future_Ticket" . ?w)
                       ("@emergency" . ?e)
                       ("@research" . ?r)
 
@@ -553,6 +580,129 @@ Insert blank line before new heading or plain text list item
         )
       )
 #+END_SRC
+
+** Enhanced Agenda View
+#+BEGIN_SRC emacs-lisp
+  ;; Agenda View "d"
+  (defun air-org-skip-subtree-if-priority (priority)
+    "Skip an agenda subtree if it has a priority of PRIORITY.
+
+    PRIORITY may be one of the characters ?A, ?B, or ?C."
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (pri-value (* 1000 (- org-lowest-priority priority)))
+          (pri-current (org-get-priority (thing-at-point 'line t))))
+      (if (= pri-value pri-current)
+          subtree-end
+        nil)))
+
+  (setq org-agenda-skip-deadline-if-done t)
+
+  (setq org-agenda-custom-commands
+        '(
+          ;; Daily Agenda & TODOs
+          ("d" "Daily agenda and all TODOs"
+
+           ;; Display items with priority A
+           ((tags "PRIORITY=\"A\""
+                  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                   (org-agenda-overriding-header "High-priority unfinished tasks:")))
+
+            ;; View 7 days in the calendar view
+            (agenda "" ((org-agenda-span 7)))
+
+            ;; Display items with priority B (really it is view all items minus A & C)
+            (alltodo ""
+                     ((org-agenda-skip-function '(or (air-org-skip-subtree-if-priority ?A)
+                                                     (air-org-skip-subtree-if-priority ?C)
+                                                     (org-agenda-skip-if nil '(scheduled deadline))))
+                      (org-agenda-overriding-header "ALL normal priority tasks:")))
+
+            ;; Display items with pirority C
+            (tags "PRIORITY=\"C\""
+                  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                   (org-agenda-overriding-header "Low-priority Unfinished tasks:")))
+            )
+
+           ;; Don't compress things (change to suite your tastes)
+           ((org-agenda-compact-blocks nil)))
+        ("j" "James's Super View"
+         (
+          (agenda ""
+                  (
+                   (org-agenda-remove-tags t)
+                   (org-agenda-span 7)
+                   )
+                  )
+
+          (alltodo ""
+                   (
+                    ;; Remove tags to make the view cleaner
+                    (org-agenda-remove-tags t)
+                    (org-agenda-prefix-format "  %t  %s")
+                    (org-agenda-overriding-header "CURRENT STATUS")
+
+                    ;; Define the super agenda groups (sorts by order)
+                    (org-super-agenda-groups
+                     '(
+                       ;; Filter where tag is CRITICAL
+                       (:name "Critical Tasks"
+                              :tag "CRITICAL"
+                              :order 0
+                              )
+                       ;; Filter where TODO state is IN-PROGRESS
+                       (:name "Currently Working"
+                              :todo "IN-PROGRESS"
+                              :order 1
+                              )
+                       ;; Filter where TODO state is PLANNING
+                       (:name "Planning Next Steps"
+                              :todo "PLANNING"
+                              :order 2
+                              )
+                       ;; Filter where TODO state is BLOCKED or where the tag is obstacle
+                       (:name "Problems & Blockers"
+                              :todo "BLOCKED"
+                              :tag "obstacle"
+                              :order 3
+                              )
+                       ;; Filter where tag is @write_future_ticket
+                       (:name "Tickets to Create"
+                              :tag "@write_future_ticket"
+                              :order 4
+                              )
+                       ;; Filter where tag is @research
+                       (:name "Research Required"
+                              :tag "@research"
+                              :order 7
+                              )
+                       ;; Filter where tag is meeting and priority is A (only want TODOs from meetings)
+                       (:name "Meeting Action Items"
+                              :and (:tag "meeting" :priority "A")
+                              :order 8
+                              )
+                       ;; Filter where state is TODO and the priority is A and the tag is not meeting
+                       (:name "Other Important Items"
+                              :and (:todo "TODO" :priority "A" :not (:tag "meeting"))
+                              :order 9
+                              )
+                       ;; Filter where state is TODO and priority is B
+                       (:name "General Backlog"
+                              :and (:todo "TODO" :priority "B")
+                              :order 10
+                              )
+                       ;; Filter where the priority is C or less (supports future lower priorities)
+                       (:name "Non Critical"
+                              :priority<= "C"
+                              :order 11
+                              )
+                       ;; Filter where TODO state is VERIFYING
+                       (:name "Currently Being Verified"
+                              :todo "VERIFYING"
+                              :order 20
+                              )
+          ))))))))
+#+END_SRC
+
 ** =TODO= Settings
 
 Keywords
