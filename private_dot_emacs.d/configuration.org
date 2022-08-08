@@ -1,4 +1,4 @@
-+TITLE: Emacs Configuration
+#+TITLE: Emacs Configuration
 #+AUTHOR: Chad McAuley
 #+EMAIL: inertquartet@github.com
 #+OPTIONS: toc:nil num:nil
@@ -148,7 +148,7 @@ Hide minibuffer scrollbar
 
 ** Set default font
 
-I've been really enjoying MSFT's new =Cascadia Code= font
+I've been really enjoying MSFT's new =Cascadia Code= font, so I want to use the Nerd Font version in emacs.
 
 #+BEGIN_SRC emacs-lisp
   (setq wp/default-font "CaskaydiaCove Nerd Font Mono")
@@ -297,12 +297,17 @@ Softly highlight the background color of the line containing the point.
 #  (executable-find (getenv "BROWSER"))
 #  browse-url-browser-function 'browse-url-generic)
 # #+END_SRC
+
 ** Fix =ediff= behavior
 #+begin_src emacs-lisp
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setq ediff-split-window-function 'split-window-horizontally)
 #+end_src
 
+** Always use =ibuffer=
+#+BEGIN_SRC emacs-lisp
+(defalias 'list-buffers 'ibuffer)
+#+END_SRC
 
 * Miscellaneous Utility Packages
 ** CSV Mode
@@ -332,54 +337,34 @@ Softly highlight the background color of the line containing the point.
 
 # (setq tiny-menu-forever nil))
 #+END_SRC
-* Helm
-# ** Basic configuration
-# #+BEGIN_SRC emacs-lisp
-# (use-package helm
-#   :config
-#   (require 'helm)
-#   (require 'helm-config))
-#    (when (executable-find "curl")
-#   (setq helm-google-suggest-use-curl-p t))
-
-#   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-#   helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-#   helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-#   helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-#   helm-ff-file-name-history-use-recentf t
-#   helm-echo-input-in-header-line t)
-
-
-#   (setq helm-autoresize-max-height 0)
-#   (setq helm-autoresize-min-height 20)
-#   (helm-autoresize-mode 1)
-
-#   (helm-mode 1)
-# #+END_SRC
-
-** Key bindings
-
-The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-Changed to "C-c h". Note: We must set "C-c h" globally, because we
-cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-
-# #+BEGIN_SRC emacs-lisp
-# (global-set-key (kbd "C-c h") 'helm-command-prefix)
-# (global-unset-key (kbd "C-x c"))
-# (global-set-key (kbd "M-x") 'helm-M-x) ; use Helm for M-x
-# (global-set-key (kbd "M-y") 'helm-show-kill-ring) ; use Helm for kill ring
-# (global-set-key (kbd "C-x b") 'helm-mini) ; use Helm to navigate buffers/recentf
-# (global-set-key (kbd "C-x C-f") 'helm-find-files) ; use Helm to find files
-# (global-set-key (kbd "C-c h o") 'helm-occur) ; use Helm for occurences in current buffer
-# (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings) ; use Helm to view all mark rings
-# (global-set-key (kbd "C-c h g") 'helm-google-suggest) ; Google Search
-
-# (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-# (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-# (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-# #+END_SRC
 
 * Org Mode
+
+** UI Preferences
+
+#+BEGIN_SRC emacs-lisp
+(let* ((variable-tuple
+        (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+              ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+              ((x-list-fonts "Verdana")         '(:font "Verdana"))
+              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+       (base-font-color     (face-foreground 'default nil 'default))
+       (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+
+  (custom-theme-set-faces
+   'user
+   `(org-level-8 ((t (,@headline ,@variable-tuple))))
+   `(org-level-7 ((t (,@headline ,@variable-tuple))))
+   `(org-level-6 ((t (,@headline ,@variable-tuple))))
+   `(org-level-5 ((t (,@headline ,@variable-tuple))))
+   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
+   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
+   `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.6 :underline nil))))))
+   #+END_SRC
 
 ** Basic Configuration
 Use GNU org mode package only
@@ -389,17 +374,17 @@ Use GNU org mode package only
     :pin gnu)
 #+END_SRC
 
-Set org file location to =~/org= and define default notes file
+Set org file location to =~/notebook= and define default notes file
 
 #+begin_src emacs-lisp
-(setq org-directory "~/org/")
+(setq org-directory "~/notebook/")
 (setq org-default-notes-file (concat org-directory "/refile.org"))
 #+end_src
 
 Set Agenda Files Location
 
 #+begin_src emacs-lisp
-(setq org-agenda-files '("~/org"))
+(setq org-agenda-files '("~/notebook"))
 #+end_src
 
 Follow links when Enter/Return is pressed
@@ -448,7 +433,7 @@ Use SMR (shiftmetaright) to change level of org items
 Hide emphasis markers
 
 #+begin_src emacs-lisp
-  (setq org-hide-emphasis-markers t)
+(setq org-hide-emphasis-markers t)
 #+end_src
 
 Enable word wrap in org-mode
@@ -483,6 +468,111 @@ Insert blank line before new heading or plain text list item
 # (global-set-key (kbd "C-c c") 'org-capture)
 # (global-set-key (kbd "C-c b") 'org-switchb)
 # #+end_src
+
+** Capture Templates
+#+BEGIN_SRC emacs-lisp
+  (setq org-capture-templates
+        '(
+        ("j" "Work Log Entry"
+         entry (file+datetree "~/notebook/work-log.org")
+         "* %?"
+         :empty-lines 0)
+        ("n" "Note"
+         entry (file+headline "~/notebook/notes.org" "Random Notes")
+         "** %?"
+         :empty-lines 0)
+       ("g" "General To-Do"
+         entry (file+headline "~/notebook/todos.org" "General Tasks")
+         "* TODO [#B] %?\n:Created: %T\n "
+         :empty-lines 0)
+       ("c" "Code To-Do"
+        entry (file+headline "~/notebook/todos.org" "Code Related Tasks")
+        "* TODO [#B] %?\n:Created: %T\n%i\n%a\nProposed Solution: "
+        :empty-lines 0)
+       ("m" "Meeting"
+        entry (file+datetree "~/org/meetings.org")
+        "* %? :meeting:%^g \n:Created: %T\n** Attendees\n*** \n** Notes\n** Action Items\n*** TODO [#A] "
+        :tree-type week
+        :clock-in t
+        :clock-resume t
+        :empty-lines 0)
+  ))
+#+END_SRC
+
+** Tags
+#+BEGIN_SRC emacs-lisp
+(setq org-tag-alist '(
+                      ;; Ticket types
+                      (:startgroup . nil)
+                      ("@bug" . ?b)
+                      ("@feature" . ?u)
+                      ("@spike" . ?j)
+                      (:endgroup . nil)
+
+                      ;; Ticket flags
+                      ("@write_future_ticket" . ?w)
+                      ("@emergency" . ?e)
+                      ("@research" . ?r)
+
+                      ;; Meeting types
+                      (:startgroup . nil)
+                      ("sprint_planning" . ?i)
+                      ("dsu" . ?d)
+                      ("grooming" . ?g)
+                      ("sprint_retro" . ?s)
+                      (:endgroup . nil)
+
+                      ;; Code TODOs tags
+                      ("QA" . ?q)
+                      ("backend" . ?k)
+                      ("broken_code" . ?c)
+                      ("frontend" . ?f)
+
+                      ;; Special tags
+                      ("CRITICAL" . ?x)
+                      ("obstacle" . ?o)
+
+                      ;; Meeting tags
+                      ("HR" . ?h)
+                      ("general" . ?l)
+                      ("meeting" . ?m)
+                      ("misc" . ?z)
+                      ("planning" . ?p)
+
+                      ;; Work Log Tags
+                      ("accomplishment" . ?a)
+                      ))
+(setq org-tag-faces
+      '(
+        ("planning"  . (:foreground "mediumPurple1" :weight bold))
+        ("backend"   . (:foreground "royalblue1"    :weight bold))
+        ("frontend"  . (:foreground "forest green"  :weight bold))
+        ("QA"        . (:foreground "sienna"        :weight bold))
+        ("meeting"   . (:foreground "yellow1"       :weight bold))
+        ("CRITICAL"  . (:foreground "red1"          :weight bold))
+        )
+      )
+#+END_SRC
+** =TODO= Settings
+
+Keywords
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "PLANNING(p)" "IN-PROGRESS(i@/!)" "VERIFYING(v!)" "BLOCKED(b@)"  "|" "DONE(d!)" "NOTNEEDED(n@!)" "WONT-DO(w@/!)" )
+          ))
+(setq org-todo-keyword-faces
+      '(
+        ("TODO" . (:foreground "GoldenRod" :weight bold))
+        ("PLANNING" . (:foreground "DeepPink" :weight bold))
+        ("IN-PROGRESS" . (:foreground "Cyan" :weight bold))
+        ("VERIFYING" . (:foreground "DarkOrange" :weight bold))
+        ("BLOCKED" . (:foreground "Red" :weight bold))
+        ("DONE" . (:foreground "LimeGreen" :weight bold))
+        ("OBE" . (:foreground "LimeGreen" :weight bold))
+        ("WONT-DO" . (:foreground "LimeGreen" :weight bold))
+        ))
+#+END_SRC
 
 ** Refile Settings
 
