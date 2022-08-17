@@ -364,6 +364,15 @@ Softly highlight the background color of the line containing the point.
 # (setq tiny-menu-forever nil))
 #+END_SRC
 
+
+* Magit
+
+** Install Magit from MELPA
+#+begin_src emacs-lisp
+    (use-package magit
+      :ensure t)
+#+end_src
+
 * Org Mode
 
 ** UI Preferences
