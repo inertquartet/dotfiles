@@ -330,6 +330,12 @@ Softly highlight the background color of the line containing the point.
 #+END_SRC
 
 * Miscellaneous Utility Packages
+** vterm
+
+#+begin_src emacs-lisp
+  (use-package vterm)
+#+end_src
+
 ** CSV Mode
 # #+BEGIN_SRC emacs-lisp
 # (use-package csv-mode)
