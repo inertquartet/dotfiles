@@ -336,6 +336,15 @@ Softly highlight the background color of the line containing the point.
   (use-package vterm)
 #+end_src
 
+** markdown-mode
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+#+end_src
+
 ** CSV Mode
 # #+BEGIN_SRC emacs-lisp
 # (use-package csv-mode)
