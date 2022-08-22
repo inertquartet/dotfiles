@@ -540,7 +540,7 @@ Insert blank line before new heading or plain text list item
         "* TODO [#B] %?\n:Created: %T\n%i\n%a\nProposed Solution: "
         :empty-lines 0)
        ("m" "Meeting"
-        entry (file+datetree "~/org/meetings.org")
+        entry (file+datetree "~/notebook/meetings.org")
         "* %? :meeting:%^g \n:Created: %T\n** Attendees\n*** \n** Notes\n** Action Items\n*** TODO [#A] "
         :tree-type week
         :clock-in t
