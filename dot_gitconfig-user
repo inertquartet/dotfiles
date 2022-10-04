@@ -26,3 +26,8 @@
 	co = checkout
 	st = status -sb
 	lg = log --graph --pretty=format:'%C(yellow)%h%C(auto)%d%Creset %s %C(white)- %an, %ar%Creset'
+
+[url "https://github.com/"]
+     insteadOf = gh:
+[url "https://gist.github.com/"]
+     insteadOf = gist:
