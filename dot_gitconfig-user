@@ -1,0 +1,7 @@
+[user]
+	name = Chad McAuley
+	email = inertquartet@github.com
+[github]
+	user = inertquartet
+[credential]
+	helper = osxkeychain
