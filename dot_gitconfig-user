@@ -26,6 +26,8 @@
 	co = checkout
 	st = status -sb
 	lg = log --graph --pretty=format:'%C(yellow)%h%C(auto)%d%Creset %s %C(white)- %an, %ar%Creset'
+	details = log -n1 -p --format=fuller
+	this = !get init && git add . && git commit -m \"Initial commit.\"
 
 [url "https://github.com/"]
      insteadOf = gh:
