@@ -424,17 +424,17 @@ Use =org-super-agenda=
   :ensure t)
 #+END_SRC
 
-Set org file location to =~/notebook= and define default notes file
+Set org file location to =~/notebook-org= and define default notes file
 
 #+begin_src emacs-lisp
-  (setq org-directory "~/notebook/")
+  (setq org-directory "~/notebook-org/")
   (setq org-default-notes-file (concat org-directory "/refile.org"))
 #+end_src
 
 Set Agenda Files Location
 
 #+begin_src emacs-lisp
-(setq org-agenda-files '("~/notebook"))
+(setq org-agenda-files '("~/notebook-org"))
 #+end_src
 
 Follow links when Enter/Return is pressed
@@ -524,23 +524,23 @@ Insert blank line before new heading or plain text list item
   (setq org-capture-templates
         '(
         ("j" "Work Log Entry"
-         entry (file+datetree "~/notebook/work-log.org")
+         entry (file+datetree "~/notebook-org/work-log.org")
          "* %?"
          :empty-lines 0)
         ("n" "Note"
-         entry (file+headline "~/notebook/notes.org" "Random Notes")
+         entry (file+headline "~/notebook-org/notes.org" "Random Notes")
          "** %?"
          :empty-lines 0)
        ("g" "General To-Do"
-         entry (file+headline "~/notebook/todos.org" "General Tasks")
+         entry (file+headline "~/notebook-rg/todos.org" "General Tasks")
          "* TODO [#B] %?\n:Created: %T\n "
          :empty-lines 0)
        ("c" "Code To-Do"
-        entry (file+headline "~/notebook/todos.org" "Code Related Tasks")
+        entry (file+headline "~/notebook-org/todos.org" "Code Related Tasks")
         "* TODO [#B] %?\n:Created: %T\n%i\n%a\nProposed Solution: "
         :empty-lines 0)
        ("m" "Meeting"
-        entry (file+datetree "~/notebook/meetings.org")
+        entry (file+datetree "~/notebook-org/meetings.org")
         "* %? :meeting:%^g \n:Created: %T\n** Attendees\n*** \n** Notes\n** Action Items\n*** TODO [#A] "
         :tree-type week
         :clock-in t
