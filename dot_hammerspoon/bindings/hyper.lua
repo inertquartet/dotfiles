@@ -32,6 +32,9 @@ hyper:bind('shift', 'l', function() yabaiMsg( 'window', 'swap east' ) end)
 hyper:bind('shift', 'j', function() yabaiMsg( 'window', 'swap south' ) end)
 hyper:bind('shift', 'k', function() yabaiMsg( 'window', 'swap north' ) end)
 
+hyper:bind({'shift', 'alt'}, 'h', function() MoveCurrentWindowToDisplay('prev') end)
+hyper:bind({'shift', 'alt'}, 'l', function() MoveCurrentWindowToDisplay('next') end)
+
 hyper:bind('alt', 'h', function() yabaiMsg( 'window', 'warp west' ) end)
 hyper:bind('alt', 'l', function() yabaiMsg( 'window', 'warp east' ) end)
 hyper:bind('alt', 'j', function() yabaiMsg( 'window', 'warp south' ) end)
@@ -51,7 +54,7 @@ end)
 
 hyper:bind('', 'return', function()
 	yabaiMsg( 'space', 'focus 1' )
-	hs.application.launchOrFocus('alacritty')
+	hs.application.launchOrFocus('kitty')
 	exitHyper()
 end)
 
@@ -60,3 +63,9 @@ hyper:bind('', 'm', function()
 	hs.eventtap.keyStroke({'shift', 'ctrl'}, 'tab')
 	exitHyper()
 end)
+
+function MoveCurrentWindowToDisplay(display)
+  local windowId = GetCurrentWindowId()
+  yabaiMsg( 'window', string.format('display %s', display) )
+  yabaiMsg( 'window', string.format('focus %s', windowId) )
+end

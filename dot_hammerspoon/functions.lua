@@ -158,6 +158,24 @@ function yabaiMsg( scope, param, fallbackParam)
   os.execute(cmd)
 end
 
+function yabaiQuery( scope, param )
+  local cmd = string.format("%s -m query --%s", YabaiPath, scope)
+  if param~=nil then
+    cmd = string.format("%s --%s", cmd, param)
+  end
+  print(cmd)
+  local result = hs.execute(cmd)
+  return result
+end
+
+function GetCurrentWindowId()
+  local window = yabaiQuery('windows', 'window')
+  local cmd = string.format("echo '%s' | /usr/local/bin/jq .id", window)
+  local id = hs.execute(cmd)
+  print('Window ID: ', id)
+  return id
+end
+
 function showHideOrFocus( window )
   local targetWindow = hs.window.find( window )
   print('showHideOrFocus on window ' .. window )
@@ -201,7 +219,6 @@ function setPadding( x_val, y_val )
     else
       y_pad = y_val * 20
     end
-
     gap = x_pad
   end
 
@@ -211,8 +228,8 @@ function setPadding( x_val, y_val )
   yabaiMsg( 'space', gap_change )
 end
 
--- this whole function is due for an idiomatic Lua refactor.  
--- TODO: figure out how to better handle state in Lua to maintain proper functional 
+-- this whole function is due for an idiomatic Lua refactor.
+-- TODO: figure out how to better handle state in Lua to maintain proper functional
 -- programming practices (i.e. pass a state object rather than violating the function
 -- boundary by using outer scope variables.
 local current_mode = "no_zen"
@@ -225,12 +242,14 @@ function toggleZenMode( mode )
   else
     if mode == 'zen' then
       zen_pad.x = 25
-      zen_pad.y = 3 
+      zen_pad.y = 3
+    elseif mode == 'full' then
+      zen_pad = { x = 3, y = 3 }
     elseif mode == 'wide' then
       zen_pad = { x = 15, y = 3 }
     elseif mode == 'narrow' then
       zen_pad = { x = 35, y = 3 }
-    end 
+    end
 
     setPadding(zen_pad.x, zen_pad.y)
     yabaiMsg( 'space', 'layout stack' )
