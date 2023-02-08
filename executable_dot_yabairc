@@ -1,6 +1,6 @@
 #! /usr/bin/env sh
 
-##  sudo yabai --load-sa
+sudo yabai --load-sa
 
 # global settings
 yabai -m config \
