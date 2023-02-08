@@ -1,0 +1,65 @@
+#! /usr/bin/env sh
+
+sudo yabai --load-sa
+
+# global settings
+yabai -m config \
+  mouse_follows_focus                 off \
+  focus_follows_mouse          off \
+  window_placement             second_child \
+  window_topmost               off \
+  window_shadow                on \
+  window_opacity               on \
+  window_opacity_duration		   0.0 \
+  active_window_opacity        1.0 \
+  normal_window_opacity        0.95 \
+  window_border                off \
+  window_border_width          2 \
+  active_window_border_color   0xfff38ba8 \
+  normal_window_border_color   0xff555555 \
+  insert_feedback_color        0xffd75f5f \
+  split_ratio                  0.50 \
+  auto_balance                 off \
+  mouse_modifier               ctrl \
+  mouse_action1                move \
+  mouse_action2                resize \
+  layout                       bsp \
+  top_padding                  12 \
+  bottom_padding               12 \
+  left_padding                 12 \
+  right_padding                12 \
+  window_gap                   12
+  window_animation_duration    0.1 \
+
+# app ignores
+yabai -m rule --add app="^System Information$"  manage=off
+yabai -m rule --add app="^System Preferences$"  manage=off
+yabai -m rule --add app="^System Settings$"     manage=off
+yabai -m rule --add app="Preferences$"          manage=off
+yabai -m rule --add app="^Activity Monitor"     manage=off
+yabai -m rule --add title="Preferences$"        manage=off
+yabai -m rule --add title="^Hammerspoon"        manage=off
+yabai -m rule --add title="^Wally"              manage=off
+yabai -m rule --add title="^Options"            manage=off
+yabai -m rule --add title="^Settings$"          manage=off
+yabai -m rule --add title="^Bookmark saved$"    manage=off # disable Raindrop popup in Sarafi
+yabai -m rule --add title="FloatShell"          manage=off layer=above
+yabai -m rule --add title="-lmf$"               manage=off
+
+
+# app special handlers
+yabai -m rule --add title="Picture in Picture"  manage=off
+
+# events
+# Contexts' sidebar and the Teams notification process seem to jump to the top of the list when their
+# respective apps are running.  Exclude them from focus targets.
+# focus window after active space changes
+# yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq '. | map(select(.title != \"Sidebar\" and .title != \"Microsoft Teams Notification\")) | .[0].id' )"
+
+# this makes non-resizable windows float by default.
+yabai -m signal --add event=window_created action="yabai -m query --windows --window $YABAI_WINDOW_ID | /usr/local/bin/jq -er '.\"can-resize\" or .\"is-floating\"' || yabai -m window $YABAI_WINDOW_ID --toggle float"
+
+# focus window after active display changes
+# yabai -m signal --add event=display_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq '. | map(select(.title != \"Sidebar\" and .title != \"Microsoft Teams Notification\")) | .[0].id' )"
+
+echo "yabai configuration loaded.."
