@@ -1,6 +1,9 @@
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
+export EDITOR='emacsclient'
+export VISUAL='emacsclient'
+
 export PATH=/opt/homebrew/bin:$PATH
 export MC_DEPLOY_REPO=~/code/mc-deploy
 export MMS_CONFIG_REPO=~/code/AzDevNext.Deploy.shared
