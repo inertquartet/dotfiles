@@ -492,7 +492,7 @@ Insert blank line before new heading or plain text list item
          "** %?"
          :empty-lines 0)
        ("g" "General To-Do"
-         entry (file+headline "~/notebook-rg/todos.org" "General Tasks")
+         entry (file+headline "~/notebook-org/todos.org" "General Tasks")
          "* TODO [#B] %?\n:Created: %T\n "
          :empty-lines 0)
        ("c" "Code To-Do"
