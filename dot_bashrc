@@ -19,4 +19,4 @@ source ~/.local/mc-cli/bin/mc.completion.bash
 
 source $HOME/.aliases
 
-# source /Applications/WezTerm.app/Contents/Resources/wezterm.sh
+eval "$(starship init bash)"
