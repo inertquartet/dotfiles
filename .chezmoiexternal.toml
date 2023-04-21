@@ -1,5 +1,0 @@
-[".bash_it"]
-	type = "git-repo"
-	url = "https://github.com/Bash-it/bash-it.git"
-	[".bash_it".clone]
-		args = ["--depth=1"]
