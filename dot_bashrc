@@ -1,14 +1,19 @@
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
-export EDITOR='emacsclient'
-export VISUAL='emacsclient'
+export EDITOR='code-insiders'
+export VISUAL='code-insiders'
 
 export PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
 export MC_DEPLOY_REPO=~/code/mc-deploy
 export MMS_CONFIG_REPO=~/code/AzDevNext.Deploy.shared
 export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$(go env GOPATH)/bin
+
+export GOPROXY=https://goproxy.githubapp.com/mod,https://proxy.golang.org/,direct
+export GOPRIVATE=
+export GONOPROXY=
+export GONOSUMDB='github.com/github/*'
 
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796 \
@@ -18,5 +23,7 @@ export FZF_DEFAULT_OPTS=" \
 source ~/.local/mc-cli/bin/mc.completion.bash
 
 source $HOME/.aliases
+
+eval $(thefuck --alias)
 
 eval "$(starship init bash)"

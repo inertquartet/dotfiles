@@ -3,11 +3,11 @@ local act = wezterm.action
 
 return {
 	color_scheme = "Catppuccin Latte",
-	font = wezterm.font('CaskaydiaCove Nerd Font Mono'),
+	font = wezterm.font('FiraCode Nerd Font Mono'),
 	font_size = 14.0,
-	window_background_opacity = 0.8,
+	window_background_opacity = 0.95,
 	window_frame = {
-		     font = wezterm.font { family = 'CaskaydiaCove Nerd Font Mono', weight = 'Bold' },
+		     font = wezterm.font { family = 'FiraCode Nerd Font Mono', weight = 'Bold' },
 		     font_size = 14.0,
 	},
 	keys = {
