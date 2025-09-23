@@ -155,7 +155,7 @@ I'm trying out the popular Catppuccin theme, which requires =autothemer=
 I've been really enjoying MSFT's new =Cascadia Code= font, so I want to use the Nerd Font version in emacs.
 
 #+BEGIN_SRC emacs-lisp
-  (setq wp/default-font "CaskaydiaCove Nerd Font Mono")
+  (setq wp/default-font "Cascadia Code NF")
   (setq wp/default-font-size 14)
   (setq wp/current-font-size wp/default-font-size)
 
