@@ -1,8 +1,4 @@
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export EDITOR="code-insiders --wait"
-export VISUAL="code-insiders --wait"
-
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOME/.aliases
 
 if type brew &>/dev/null
@@ -12,11 +8,5 @@ then
   autoload -Uz compinit
   compinit
 fi
-
-export PATH=/opt/homebrew/bin:$PATH
-
-export MC_DEPLOY_REPO=~/code/mc-deploy
-export MMS_CONFIG_REPO=~/code/AzDevNext.Deploy.shared
-. ~/.local/mc-cli/mc.completion.bash
 
 eval "$(starship init zsh)"
