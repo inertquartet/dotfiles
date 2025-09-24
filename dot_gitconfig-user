@@ -1,10 +1,8 @@
 [user]
 	name = Chad McAuley
-	email = inertquartet@github.com
+	email = chad.mcaauley@tutamail.com
 [github]
 	user = inertquartet
-[credential]
-	helper = osxkeychain
 [color]
 	branch = auto
 	diff = auto
